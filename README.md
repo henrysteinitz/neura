@@ -49,7 +49,6 @@ separating randomly generated clusters)
 
 **Day 4**
 - [ ] Run / train controls
-- [ ] 
 
 **Bonus**
 - [ ] Recurrent connections
