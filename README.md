@@ -18,7 +18,39 @@ neurons.
 
 ![wireframes](https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/ArtificialNeuronModel_english.png/600px-ArtificialNeuronModel_english.png)
 
-By adjusting the weights through a technique call backpropagation, ANNs can
-learn to perform task that are difficult to explicitly program. Some examples
-include object recognition, speech recognition, translation, and image
-classification.
+By adjusting the weights through a technique called backpropagation, ANNs can
+learn to perform task that are difficult to explicitly program, provided they
+have an appropriate network topology. Some examples include object recognition,
+speech recognition, translation, and image classification.
+
+### Functionality & MVP
+
+The visualizer will be able to
+- [ ] Choose between different datasets and classification tasks (at least
+separating randomly generated clusters)
+- [ ] Design different architectures
+- [ ] Render input and each neuron's output
+- [ ] Render the weight of each
+- [ ] Realtime training
+
+### Implementation Timeline
+
+**Day 1**
+- [ ] Setup
+
+**Day 2**
+- [ ] Run / train network logic
+- [ ] Create neurons and connections
+
+**Day 3**
+- [ ] Input generation logic
+- [ ] draw input /output
+- [ ] draw classification landscape
+
+**Day 4**
+- [ ] Run / train controls
+- [ ] 
+
+**Bonus**
+- [ ] Recurrent connections
+- [ ] Handwriting data
