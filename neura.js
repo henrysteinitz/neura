@@ -50,7 +50,7 @@
 	document.addEventListener("DOMContentLoaded", function(){
 	  const stage = init();
 	  stage.autoClear = false;
-	  const ann = new Perceptron([2,3,1], stage);
+	  const ann = new Perceptron([2,4,4,1], stage);
 	  ann.training = false;
 	  ann.visualizing = false;
 	  createjs.Ticker.addEventListener("tick", function(){
@@ -63,6 +63,7 @@
 	    }
 	    stage.clear();
 	    stage.update();
+
 	  });
 
 	  document.getElementsByClassName('train')[0].addEventListener("click", function(e){
@@ -250,13 +251,16 @@
 	  visualCompute(input){
 	    this.xDisplay.text = input[0].toString().slice(0,6);
 	    this.yDisplay.text = input[1].toString().slice(0,6);
-	    this.outDisplay.text = this.compute(input)[0].toString().slice(0,6);
+	    this.outDisplay.text = (Math.round(this.compute(input)[0]*100000)/100000).toString();
 	    this.stage.update();
 	    this.activationMatrices = [];
 	      for (let i = 0; i < this.weightMatrices.length; i++){
 	      const weights = this.weightMatrices[i]
-	      this.activationMatrices.push(weights.halfMultiply(this.activations[i]));
+	      const activations = this.activations[i].slice(0);
+	      activations.push(1);
+	      this.activationMatrices.push(weights.halfMultiply(new Vector(activations)));
 	    }
+	    this.renderActivations(0);
 	  }
 
 	  // batch is a 2d array containing training data and label
@@ -374,6 +378,55 @@
 	    }
 	  }
 
+	  renderActivations(l){
+	    // render input
+	    if (l === 0){
+	      for (let j = 0; j < this.neuronCenters[0].length; j++){
+	        const line = new createjs.Shape();
+	        line.graphics.beginStroke("#000000");
+	        line.graphics.moveTo(this.neuronCenters[0][j][0] - this.radius - this.ioLength, this.neuronCenters[0][j][1]);
+	        const cmd = line.graphics.lineTo(this.neuronCenters[0][j][0] - this.radius - this.ioLength, this.neuronCenters[0][j][1]).command;
+	        line.graphics.endStroke();
+	        createjs.Tween.get(cmd).to({x:this.neuronCenters[0][j][0] - this.radius}, 1400).call(
+	          this.renderActivations.bind(this,l+1)
+	        );
+	        this.stage.addChild(line);
+	      }
+	    } else if (l === this.layers.length){
+
+	    } else {
+	      for (let j = 0; j < this.synapses[l - 1].length; j++){
+	        for (let k = 0; k < this.synapses[l - 1][j].length; k++){
+	          const line = new createjs.Shape();
+	          let pos = 0;
+	          let neg = 0;
+	          if (this.activationMatrices[l-1].rows[k][j] > 0){
+	            pos = Math.floor(this.activationMatrices[l-1].rows[k][j] * 10);
+	          } else {
+	            neg = -1 * Math.floor(this.activationMatrices[l-1].rows[k][j] * 10);
+	          }
+	          line.graphics.beginStroke(`rgb(${neg},1,${pos})`);
+	          let width = 1;
+	          if (Math.abs(this.weightMatrices[l-1].rows[k][j]) > 1){
+	            width = Math.abs(this.weightMatrices[l-1].rows[k][j]);
+	          }
+	          line.graphics.setStrokeStyle(width);
+	          line.graphics.moveTo(this.synapses[l-1][j][k][0][0], this.synapses[l-1][j][k][0][1]);
+	          const cmd = line.graphics.lineTo(this.synapses[l-1][j][k][0][0], this.synapses[l-1][j][k][0][1]).command;
+	          line.graphics.endStroke();
+	          createjs.Tween.get(cmd).to({x:this.synapses[l-1][j][k][1][0], y:this.synapses[l-1][j][k][1][1]}, 1400).call(
+	            this.renderActivations.bind(this,l+1)
+	          );
+	          this.stage.addChild(line);
+	          //stage.update();
+	          //this.lines[i][j].push(line);
+	        }
+	      }
+	    }
+
+
+	  }
+
 	  updateConnections(){
 	    this.k += 1;
 	    for (let i = 0; i < this.lines.length; i++){
@@ -472,9 +525,10 @@
 	  }
 	  halfMultiply(vector){
 	    if (this.width === vector.height){
-	      result = new Matrix(this.width, this.height);
+
+	      const result = new Matrix(this.width, this.height);
 	      for (let j = 0; j < result.height; j++){
-	        result.rows[j] = Functions.pointProduct(this.rows[j], vector.colums()[0]);
+	        result.rows[j] = Functions.pointProduct(this.rows[j], vector.columns()[0]);
 	      }
 	      return result;
 	    }

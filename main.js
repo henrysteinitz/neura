@@ -4,7 +4,7 @@ const Perceptron = require('./perceptron.js');
 document.addEventListener("DOMContentLoaded", function(){
   const stage = init();
   stage.autoClear = false;
-  const ann = new Perceptron([2,3,1], stage);
+  const ann = new Perceptron([2,4,4,1], stage);
   ann.training = false;
   ann.visualizing = false;
   createjs.Ticker.addEventListener("tick", function(){
@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     stage.clear();
     stage.update();
+
   });
 
   document.getElementsByClassName('train')[0].addEventListener("click", function(e){
