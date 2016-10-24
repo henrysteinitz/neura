@@ -1,0 +1,81 @@
+const Perceptron = require('./perceptron.js');
+
+
+document.addEventListener("DOMContentLoaded", function(){
+  const stage = init();
+  stage.autoClear = false;
+  const ann = new Perceptron([2,3,1], stage);
+  ann.training = false;
+  ann.visualizing = false;
+  createjs.Ticker.addEventListener("tick", function(){
+    if (ann.training) {
+      let batch = generateBatch(3);
+      ann.train(batch);
+    }
+    if (ann.visualizing) {
+
+    }
+    stage.clear();
+    stage.update();
+  });
+
+  document.getElementsByClassName('train')[0].addEventListener("click", function(e){
+    if (ann.training) {
+      e.target.className = "train"
+      e.target.innerHTML = "Train";
+      ann.training = false;
+    } else {
+      e.target.className = "stop";
+      e.target.innerHTML = "Stop";
+      ann.training = true;
+      if (parseFloat(document.getElementById("rate").value)) {
+        ann.learningRate = parseFloat(document.getElementById("rate").value);
+      } else {
+        ann.learningRate = 1.0;
+        document.getElementById("rate").value = "1.0";
+      }
+    }
+  })
+
+  document.getElementsByClassName('run')[0].addEventListener("click", function(e){
+    const x = parseFloat(document.getElementById("x").value);
+    const y = parseFloat(document.getElementById("y").value);
+    ann.visualCompute([x, y]);
+  });
+
+});
+
+
+
+function generateBatch(size){
+    const batch = [];
+    for (let i = 0; i < size; i++){
+      const x = Math.random();
+      const y = Math.random();
+      let z;
+      if (eval(document.getElementById("data-eval").value)){
+        z = 1;
+      } else {
+        z = 0;
+      }
+      batch.push([x, y, z]);
+    }
+    return batch;
+}
+
+function init(){
+  const canvas = document.getElementById("architecture-canvas");
+  const stage = new createjs.Stage("architecture-canvas");
+
+  if (window.devicePixelRatio) {
+    const height = canvas.getAttribute('height');
+    const width = canvas.getAttribute('width');
+    canvas.setAttribute('width', Math.round(width * window.devicePixelRatio));
+    canvas.setAttribute('height', Math.round(height * window.devicePixelRatio));
+    canvas.style.width = width+"px";
+    canvas.style.height = height+"px";
+    stage.scaleX = stage.scaleY = window.devicePixelRatio;
+  }
+
+  return stage;
+}

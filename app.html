@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Neura</title>
+    <link rel="stylesheet" type="text/css" href="app.css" />
+    <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+    <script src="neura.js"></script>
+
+  </head>
+  <body>
+    <div class=" controls train-eval">
+      <textarea id="data-eval">x + y > .5</textarea>
+    </div>
+    <div class=" controls train-controls">
+      <input type="text" name="name" placeholder="Rate" id="rate">
+      <button class="train"> Train </button>
+    </div>
+    <div class="container">
+      <div class="architecture">
+        <canvas width="800" height="500" id="architecture-canvas"></canvas>
+      </div>
+    </div>
+    <div class="controls run-controls">
+      <input type="text" name="name" placeholder="x" id="x">
+      <input type="text" name="name" placeholder="y" id="y">
+      <button class="run"> Run </button>
+    </div>
+
+    <div class="output"></div>
+
+  </body>
+</html>

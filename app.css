@@ -1,0 +1,112 @@
+* {
+        /*Reset's every elements apperance*/
+        background: none repeat scroll 0 0 transparent;
+        border: medium none;
+        border-spacing: 0;
+        font-size: 16px;
+        font-weight: normal;
+        line-height: 1.42rem;
+        list-style: none outside none;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        text-decoration: none;
+        text-indent: 0;
+}
+
+body{
+  padding: 0;
+  margin: 0;
+}
+div{
+  margin: 0;
+  padding: 0;
+}
+
+#architecture-canvas{
+}
+
+
+
+.controls{
+  width: 100%;
+  text-align: center;
+}
+.controls input{
+  width: 60px;
+  border: 1px solid rgb(200,200,200);
+  border-radius:3px;
+  margin: 2px;
+  padding-left: 5px;
+}
+
+.controls textarea{
+  width: 260px;
+  height: 70px;
+  border: 1px solid rgb(200,200,200);
+  border-radius:3px;
+  margin: 2px;
+  padding: 5px;
+  resize: none;
+}
+
+.controls textarea:focus{
+  outline:none;
+}
+
+.train-controls{
+  margin-top:00px;
+}
+
+.controls button{
+  margin: 8px;
+  width: 100px;
+  height: 30px;
+  border-radius: 3px;
+  text-align: center;
+  tex
+}
+
+.run{
+  background: rgb(30,180,250);
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.train{
+  background: rgb(30,198,80);
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.stop{
+  background: rgb(250,20,20);
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.container{
+  padding-left: 60px;
+  padding-right: 60px;
+  width: calc(100% - 120px);
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.architecture{
+  width:800px;
+  height: 500px;
+  margin: auto;
+}
+
+.input{
+  width: 260px;
+}
+
+.output{
+  width:260px;
+}
