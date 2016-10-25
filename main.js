@@ -12,9 +12,6 @@ document.addEventListener("DOMContentLoaded", function(){
       let batch = generateBatch(3);
       ann.train(batch);
     }
-    if (ann.visualizing) {
-
-    }
     stage.clear();
     stage.update();
 
@@ -29,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function(){
       e.target.className = "stop";
       e.target.innerHTML = "Stop";
       ann.training = true;
+      ann.clearActivationLines();
       if (parseFloat(document.getElementById("rate").value)) {
         ann.learningRate = parseFloat(document.getElementById("rate").value);
       } else {
@@ -39,11 +37,12 @@ document.addEventListener("DOMContentLoaded", function(){
   })
 
   document.getElementsByClassName('run')[0].addEventListener("click", function(e){
-    const x = parseFloat(document.getElementById("x").value);
-    const y = parseFloat(document.getElementById("y").value);
-    ann.visualCompute([x, y]);
+    if (!ann.training){
+      const x = parseFloat(document.getElementById("x").value);
+      const y = parseFloat(document.getElementById("y").value);
+      ann.visualCompute([x, y]);
+    }
   });
-
 });
 
 

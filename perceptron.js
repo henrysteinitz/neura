@@ -20,6 +20,7 @@ class Perceptron {
     this.neuronCenters = [];
     this.synapses = [];
     this.lines = [];
+    this.activationLines = [];
     this.initializeViews();
     this.renderNeurons();
     this.renderConnections();
@@ -126,6 +127,7 @@ class Perceptron {
       activations.push(1);
       this.activationMatrices.push(weights.halfMultiply(new Vector(activations)));
     }
+    this.clearActivationLines();
     this.renderActivations(0);
   }
 
@@ -257,9 +259,19 @@ class Perceptron {
           this.renderActivations.bind(this,l+1)
         );
         this.stage.addChild(line);
+        this.activationLines.push(line);
       }
     } else if (l === this.layers.length){
-
+      for (let j = 0; j < this.neuronCenters[l - 1].length; j++){
+        const line = new createjs.Shape();
+        line.graphics.beginStroke("#000000");
+        line.graphics.moveTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]);
+        const cmd = line.graphics.lineTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]).command;
+        line.graphics.endStroke();
+        createjs.Tween.get(cmd).to({x:this.neuronCenters[l - 1][j][0] + this.radius + this.ioLength}, 1400);
+        this.stage.addChild(line);
+        this.activationLines.push(line);
+      }
     } else {
       for (let j = 0; j < this.synapses[l - 1].length; j++){
         for (let k = 0; k < this.synapses[l - 1][j].length; k++){
@@ -284,13 +296,16 @@ class Perceptron {
             this.renderActivations.bind(this,l+1)
           );
           this.stage.addChild(line);
-          //stage.update();
-          //this.lines[i][j].push(line);
+          this.activationLines.push(line);
         }
       }
     }
+  }
 
-
+  clearActivationLines(){
+    for (let i = 0; i < this.activationLines.length; i++){
+      this.stage.removeChild(this.activationLines[i]);
+    }
   }
 
   updateConnections(){

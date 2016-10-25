@@ -58,9 +58,6 @@
 	      let batch = generateBatch(3);
 	      ann.train(batch);
 	    }
-	    if (ann.visualizing) {
-
-	    }
 	    stage.clear();
 	    stage.update();
 
@@ -75,6 +72,7 @@
 	      e.target.className = "stop";
 	      e.target.innerHTML = "Stop";
 	      ann.training = true;
+	      ann.clearActivationLines();
 	      if (parseFloat(document.getElementById("rate").value)) {
 	        ann.learningRate = parseFloat(document.getElementById("rate").value);
 	      } else {
@@ -85,11 +83,12 @@
 	  })
 
 	  document.getElementsByClassName('run')[0].addEventListener("click", function(e){
-	    const x = parseFloat(document.getElementById("x").value);
-	    const y = parseFloat(document.getElementById("y").value);
-	    ann.visualCompute([x, y]);
+	    if (!ann.training){
+	      const x = parseFloat(document.getElementById("x").value);
+	      const y = parseFloat(document.getElementById("y").value);
+	      ann.visualCompute([x, y]);
+	    }
 	  });
-
 	});
 
 
@@ -154,6 +153,7 @@
 	    this.neuronCenters = [];
 	    this.synapses = [];
 	    this.lines = [];
+	    this.activationLines = [];
 	    this.initializeViews();
 	    this.renderNeurons();
 	    this.renderConnections();
@@ -260,6 +260,7 @@
 	      activations.push(1);
 	      this.activationMatrices.push(weights.halfMultiply(new Vector(activations)));
 	    }
+	    this.clearActivationLines();
 	    this.renderActivations(0);
 	  }
 
@@ -391,9 +392,19 @@
 	          this.renderActivations.bind(this,l+1)
 	        );
 	        this.stage.addChild(line);
+	        this.activationLines.push(line);
 	      }
 	    } else if (l === this.layers.length){
-
+	      for (let j = 0; j < this.neuronCenters[l - 1].length; j++){
+	        const line = new createjs.Shape();
+	        line.graphics.beginStroke("#000000");
+	        line.graphics.moveTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]);
+	        const cmd = line.graphics.lineTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]).command;
+	        line.graphics.endStroke();
+	        createjs.Tween.get(cmd).to({x:this.neuronCenters[l - 1][j][0] + this.radius + this.ioLength}, 1400);
+	        this.stage.addChild(line);
+	        this.activationLines.push(line);
+	      }
 	    } else {
 	      for (let j = 0; j < this.synapses[l - 1].length; j++){
 	        for (let k = 0; k < this.synapses[l - 1][j].length; k++){
@@ -418,13 +429,16 @@
 	            this.renderActivations.bind(this,l+1)
 	          );
 	          this.stage.addChild(line);
-	          //stage.update();
-	          //this.lines[i][j].push(line);
+	          this.activationLines.push(line);
 	        }
 	      }
 	    }
+	  }
 
-
+	  clearActivationLines(){
+	    for (let i = 0; i < this.activationLines.length; i++){
+	      this.stage.removeChild(this.activationLines[i]);
+	    }
 	  }
 
 	  updateConnections(){
