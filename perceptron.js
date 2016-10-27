@@ -26,9 +26,6 @@ class Perceptron {
     this.renderConnections();
     this.updateConnections = this.updateConnections.bind(this);
 
-    this.k = 0;
-
-
   }
 
   initializeWeights(){
@@ -175,11 +172,6 @@ class Perceptron {
     this.updateConnections();
   }
 
-
-  renderForwardPass(){
-
-  }
-
   updateArchitecture(){
     this.updateConnections();
   }
@@ -188,6 +180,7 @@ class Perceptron {
     const stage = this.stage;
     const radius = this.radius;
     const neuronCenters = this.neuronCenters;
+    const weightMatrices = this.weightMatrices;
     this.layers.forEach( function(layer, k){
       for (let i = 0; i < layer; i++){
         const circle = new createjs.Shape();
@@ -196,6 +189,23 @@ class Perceptron {
         circle.y = neuronCenters[k][i][1];
         stage.addChild(circle);
         stage.update();
+        if (k > 0){
+          circle.on("mouseover", function(e){
+            console.log('adsfd');
+            const mag = Math.tanh(weightMatrices[k - 1].rows[i][weightMatrices[k - 1].rows[i].length - 1]);
+            circle.filters = [new createjs.ColorFilter(
+              0,0,0,1,
+              180 - Math.floor(50*mag),
+              180 - Math.abs(Math.floor(50*mag)),
+              180 + Math.floor(50*mag), 0) ];
+            circle.cache(-1*radius, -1*radius, radius*2, radius*2 ,2);
+          });
+          circle.on("mouseout", function(e){
+            circle.filters = [];
+            circle.cache(-1*radius, -1*radius, radius*2, radius*2 ,2);
+          });
+        }
+
       }
     });
 
@@ -251,11 +261,11 @@ class Perceptron {
     if (l === 0){
       for (let j = 0; j < this.neuronCenters[0].length; j++){
         const line = new createjs.Shape();
-        line.graphics.beginStroke("#000000");
+        line.graphics.beginStroke("#9999ff");
         line.graphics.moveTo(this.neuronCenters[0][j][0] - this.radius - this.ioLength, this.neuronCenters[0][j][1]);
         const cmd = line.graphics.lineTo(this.neuronCenters[0][j][0] - this.radius - this.ioLength, this.neuronCenters[0][j][1]).command;
         line.graphics.endStroke();
-        createjs.Tween.get(cmd).to({x:this.neuronCenters[0][j][0] - this.radius}, 1400).call(
+        createjs.Tween.get(cmd).to({x:this.neuronCenters[0][j][0] - this.radius}, 800).call(
           this.renderActivations.bind(this,l+1)
         );
         this.stage.addChild(line);
@@ -264,11 +274,11 @@ class Perceptron {
     } else if (l === this.layers.length){
       for (let j = 0; j < this.neuronCenters[l - 1].length; j++){
         const line = new createjs.Shape();
-        line.graphics.beginStroke("#000000");
+        line.graphics.beginStroke("#9999ff");
         line.graphics.moveTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]);
         const cmd = line.graphics.lineTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]).command;
         line.graphics.endStroke();
-        createjs.Tween.get(cmd).to({x:this.neuronCenters[l - 1][j][0] + this.radius + this.ioLength}, 1400);
+        createjs.Tween.get(cmd).to({x:this.neuronCenters[l - 1][j][0] + this.radius + this.ioLength}, 800);
         this.stage.addChild(line);
         this.activationLines.push(line);
       }
@@ -276,14 +286,9 @@ class Perceptron {
       for (let j = 0; j < this.synapses[l - 1].length; j++){
         for (let k = 0; k < this.synapses[l - 1][j].length; k++){
           const line = new createjs.Shape();
-          let pos = 0;
-          let neg = 0;
-          if (this.activationMatrices[l-1].rows[k][j] > 0){
-            pos = Math.floor(this.activationMatrices[l-1].rows[k][j] * 10);
-          } else {
-            neg = -1 * Math.floor(this.activationMatrices[l-1].rows[k][j] * 10);
-          }
-          line.graphics.beginStroke(`rgb(${neg},1,${pos})`);
+          const mag = Math.tanh(this.activationMatrices[l-1].rows[k][j]);
+          const color = `rgb(${180 - Math.floor(50*mag)}, ${180 - Math.abs(Math.floor(50*mag))}, ${180 + Math.floor(50*mag)})`;
+          line.graphics.beginStroke(color);
           let width = 1;
           if (Math.abs(this.weightMatrices[l-1].rows[k][j]) > 1){
             width = Math.abs(this.weightMatrices[l-1].rows[k][j]);
@@ -292,7 +297,7 @@ class Perceptron {
           line.graphics.moveTo(this.synapses[l-1][j][k][0][0], this.synapses[l-1][j][k][0][1]);
           const cmd = line.graphics.lineTo(this.synapses[l-1][j][k][0][0], this.synapses[l-1][j][k][0][1]).command;
           line.graphics.endStroke();
-          createjs.Tween.get(cmd).to({x:this.synapses[l-1][j][k][1][0], y:this.synapses[l-1][j][k][1][1]}, 1400).call(
+          createjs.Tween.get(cmd).to({x:this.synapses[l-1][j][k][1][0], y:this.synapses[l-1][j][k][1][1]}, 800).call(
             this.renderActivations.bind(this,l+1)
           );
           this.stage.addChild(line);
@@ -309,11 +314,13 @@ class Perceptron {
   }
 
   updateConnections(){
-    this.k += 1;
     for (let i = 0; i < this.lines.length; i++){
       for (let j = 0; j < this.lines[i].length; j++){
         for (let k = 0; k < this.lines[i][j].length; k++){
-          this.lines[i][j][k].graphics.setStrokeStyle(Math.abs(this.weightMatrices[i].rows[k][j]));
+          this.stage.removeChild(this.lines[i][j][k]);
+          this.lines[i][j][k] = new createjs.Shape();
+          let stroke = Math.max(1, Math.abs(this.weightMatrices[i].rows[k][j]));
+          this.lines[i][j][k].graphics.setStrokeStyle(stroke);
           if (this.weightMatrices[i].rows[k][j] < 0) {
             this.lines[i][j][k].graphics.beginStroke("#d0d0d0");
           } else {
@@ -322,12 +329,14 @@ class Perceptron {
           this.lines[i][j][k].graphics.moveTo(this.synapses[i][j][k][0][0], this.synapses[i][j][k][0][1]);
           this.lines[i][j][k].graphics.lineTo(this.synapses[i][j][k][1][0], this.synapses[i][j][k][1][1]);
           this.lines[i][j][k].graphics.endStroke();
+          this.stage.addChild(this.lines[i][j][k]);
         }
       }
     }
-    //this.stage.removeAllChildren();
 
   }
+
+
 }
 
 
@@ -421,6 +430,18 @@ class Matrix {
         this.set(i , j, modulus * (2 * Math.random()  - 1));
       }
     }
+  }
+
+  absMax(){
+    const max = 0;
+    for (let i = 0; i < this.width; i++){
+      for (let j = 0; j < this.height; j++){
+        if (Math.abs(this.rows[j][i]) > max){
+          max = Math.abs(this.rows[j][i]);
+        }
+      }
+    }
+    return max;
   }
 }
 

@@ -3,8 +3,10 @@ const Perceptron = require('./perceptron.js');
 
 document.addEventListener("DOMContentLoaded", function(){
   const stage = init();
-  stage.autoClear = false;
-  const ann = new Perceptron([2,4,1], stage);
+  stage.enableMouseOver(30);  
+  createjs.Ticker.setFPS(70);
+  //stage.autoClear = false;
+  let ann = new Perceptron([2,4,1], stage);
   ann.training = false;
   ann.visualizing = false;
   createjs.Ticker.addEventListener("tick", function(){
@@ -12,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function(){
       let batch = generateBatch(3);
       ann.train(batch);
     }
-    stage.clear();
+    //stage.clear();
     stage.update();
 
   });
@@ -42,6 +44,17 @@ document.addEventListener("DOMContentLoaded", function(){
       const y = parseFloat(document.getElementById("y").value);
       ann.visualCompute([x, y]);
     }
+  });
+
+  document.getElementById('add-layer').addEventListener("click", function(e){
+    const layers = ann.layers.slice(0, ann.layers.length - 1).concat([4,1]);
+    stage.removeAllChildren();
+    ann = new Perceptron(layers, stage);
+  });
+  document.getElementById('remove-layer').addEventListener("click", function(e){
+    const layers = ann.layers.slice(0, ann.layers.length - 2).concat([1]);
+    stage.removeAllChildren();
+    ann = new Perceptron(layers, stage);
   });
 });
 

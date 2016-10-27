@@ -26,18 +26,24 @@ div{
 #architecture-canvas{
 }
 
-
+#data-eval{
+  width: 300px;
+}
 
 .controls{
   width: 100%;
   text-align: center;
+  outline: none;
 }
 .controls input{
   width: 60px;
   border: 1px solid rgb(200,200,200);
   border-radius:3px;
-  margin: 2px;
+  margin: 4px;
   padding-left: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  outline: none;
 }
 
 .controls textarea{
@@ -45,7 +51,7 @@ div{
   height: 70px;
   border: 1px solid rgb(200,200,200);
   border-radius:3px;
-  margin: 2px;
+  margin: 4px;
   padding: 5px;
   resize: none;
 }
@@ -54,17 +60,28 @@ div{
   outline:none;
 }
 
+#add-layer{
+  width:26px;
+  font-size: 22px;
+}
+
+#remove-layer{
+  width:26px;
+  font-size: 26px;
+}
+
 .train-controls{
-  margin-top:00px;
+  margin-top:20px;
 }
 
 .controls button{
-  margin: 8px;
+  margin: 4px;
   width: 100px;
-  height: 30px;
+  height: 28px;
   border-radius: 3px;
   text-align: center;
-  tex
+  outline: none;
+  cursor: pointer;
 }
 
 .run{
@@ -75,7 +92,7 @@ div{
 }
 
 .train{
-  background: rgb(30,198,80);
+  background: rgb(30,180,250);
   color: white;
   cursor: pointer;
   outline: none;
