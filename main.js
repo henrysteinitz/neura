@@ -3,7 +3,7 @@ const Perceptron = require('./perceptron.js');
 
 document.addEventListener("DOMContentLoaded", function(){
   const stage = init();
-  stage.enableMouseOver(30);  
+  stage.enableMouseOver(30);
   createjs.Ticker.setFPS(70);
   //stage.autoClear = false;
   let ann = new Perceptron([2,4,1], stage);
@@ -23,10 +23,12 @@ document.addEventListener("DOMContentLoaded", function(){
     if (ann.training) {
       e.target.className = "train"
       e.target.innerHTML = "Train";
+      document.getElementsByClassName('run')[0].className = "run unfaded";
       ann.training = false;
     } else {
       e.target.className = "stop";
       e.target.innerHTML = "Stop";
+      document.getElementsByClassName('run')[0].className = "run faded";
       ann.training = true;
       ann.clearActivationLines();
       if (parseFloat(document.getElementById("rate").value)) {

@@ -49,7 +49,7 @@
 
 	document.addEventListener("DOMContentLoaded", function(){
 	  const stage = init();
-	  stage.enableMouseOver(30);  
+	  stage.enableMouseOver(30);
 	  createjs.Ticker.setFPS(70);
 	  //stage.autoClear = false;
 	  let ann = new Perceptron([2,4,1], stage);
@@ -69,10 +69,12 @@
 	    if (ann.training) {
 	      e.target.className = "train"
 	      e.target.innerHTML = "Train";
+	      document.getElementsByClassName('run')[0].className = "run unfaded";
 	      ann.training = false;
 	    } else {
 	      e.target.className = "stop";
 	      e.target.innerHTML = "Stop";
+	      document.getElementsByClassName('run')[0].className = "run faded";
 	      ann.training = true;
 	      ann.clearActivationLines();
 	      if (parseFloat(document.getElementById("rate").value)) {
@@ -407,7 +409,7 @@
 	    if (l === 0){
 	      for (let j = 0; j < this.neuronCenters[0].length; j++){
 	        const line = new createjs.Shape();
-	        line.graphics.beginStroke("#9999ff");
+	        line.graphics.beginStroke("rgb(180,180,180)");
 	        line.graphics.moveTo(this.neuronCenters[0][j][0] - this.radius - this.ioLength, this.neuronCenters[0][j][1]);
 	        const cmd = line.graphics.lineTo(this.neuronCenters[0][j][0] - this.radius - this.ioLength, this.neuronCenters[0][j][1]).command;
 	        line.graphics.endStroke();
@@ -420,7 +422,7 @@
 	    } else if (l === this.layers.length){
 	      for (let j = 0; j < this.neuronCenters[l - 1].length; j++){
 	        const line = new createjs.Shape();
-	        line.graphics.beginStroke("#9999ff");
+	        line.graphics.beginStroke("rgb(180,180,180)");
 	        line.graphics.moveTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]);
 	        const cmd = line.graphics.lineTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]).command;
 	        line.graphics.endStroke();

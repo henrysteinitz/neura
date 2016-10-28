@@ -261,7 +261,7 @@ class Perceptron {
     if (l === 0){
       for (let j = 0; j < this.neuronCenters[0].length; j++){
         const line = new createjs.Shape();
-        line.graphics.beginStroke("#9999ff");
+        line.graphics.beginStroke("rgb(180,180,180)");
         line.graphics.moveTo(this.neuronCenters[0][j][0] - this.radius - this.ioLength, this.neuronCenters[0][j][1]);
         const cmd = line.graphics.lineTo(this.neuronCenters[0][j][0] - this.radius - this.ioLength, this.neuronCenters[0][j][1]).command;
         line.graphics.endStroke();
@@ -274,7 +274,7 @@ class Perceptron {
     } else if (l === this.layers.length){
       for (let j = 0; j < this.neuronCenters[l - 1].length; j++){
         const line = new createjs.Shape();
-        line.graphics.beginStroke("#9999ff");
+        line.graphics.beginStroke("rgb(180,180,180)");
         line.graphics.moveTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]);
         const cmd = line.graphics.lineTo(this.neuronCenters[l - 1][j][0] + this.radius, this.neuronCenters[l - 1][j][1]).command;
         line.graphics.endStroke();
