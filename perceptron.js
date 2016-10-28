@@ -433,7 +433,7 @@ class Matrix {
   }
 
   absMax(){
-    const max = 0;
+    let max = 0;
     for (let i = 0; i < this.width; i++){
       for (let j = 0; j < this.height; j++){
         if (Math.abs(this.rows[j][i]) > max){
